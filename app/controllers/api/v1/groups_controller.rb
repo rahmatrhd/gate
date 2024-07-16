@@ -48,7 +48,8 @@ class ::Api::V1::GroupsController < ::Api::V1::BaseController
   def list_admins
     group = Group.find(params[:id])
     users = group.group_admins.joins(:user).
-      select('users.id, users.email, users.name, users.active, group_admins.created_at as join_date')
+      select('users.id, users.email, users.name, users.active, group_admins.created_at as join_date').
+      where('users.active = ?', true)
     render json: users, status: :ok
   end
 
