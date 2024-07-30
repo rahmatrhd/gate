@@ -45,6 +45,19 @@ class ::Api::V1::GroupsController < ::Api::V1::BaseController
     head :no_content
   end
 
+  def remove_user
+    @group = Group.find_by(id: params[:id])
+    return head :not_found unless @group.present?
+    
+    return raise_unauthorized unless current_user.admin? || @group.admin?(current_user)
+    
+    user = User.find_by(id: params[:user_id])
+    return head :unprocessable_entity unless user.present?
+    
+    @group.remove_user(params[:user_id])
+    head :no_content
+  end
+
   def list_admins
     group = Group.find(params[:id])
     users = group.group_admins.joins(:user).

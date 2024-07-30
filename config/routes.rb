@@ -87,6 +87,7 @@ Rails.application.routes.draw do
       post 'endpoints' => 'endpoints#create', format: :json, :constraints => { format: 'json' }
       post 'endpoints/:id/add_group' => 'endpoints#add_group', format: :json, constraints: { format: 'json' }
       post 'groups/:id/users' => 'groups#add_user', format: :json, constraints: { format: 'json' }
+      delete 'groups/:id/users/:user_id' => 'groups#remove_user', format: :json, constraints: { format: 'json' }
       get 'groups/:id/admins' => 'groups#list_admins', format: :json, constraints: { format: 'json' }
       get 'groups/:id/vpns' => 'groups#associated_vpns', format: :json, constraints: { format: 'json' }
       get 'vpns/:id/groups' => 'vpns#associated_groups', format: :json, constraints: { format: 'json' }
