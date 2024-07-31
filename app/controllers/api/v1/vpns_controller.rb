@@ -1,6 +1,21 @@
 class ::Api::V1::VpnsController < ::Api::V1::BaseController
   before_action :set_vpn, only: [:assign_group]
 
+  def index
+    vpns = Vpn.order(:id).page(params[:page]).per(params[:per_page])
+    vpns = vpns.where("name LIKE ?", "%#{params[:q]}%") if params[:q].present?
+    render json: vpns, status: :ok
+  end
+
+  def associated_groups
+    vpn = Vpn.find_by_id(params[:id])
+    return head :not_found unless vpn.present?
+
+    groups = vpn.groups
+    groups = groups.where("name LIKE ?", "%#{params[:q]}%") if params[:q].present?
+    render json: groups, status: :ok
+  end
+
   def create
     if current_user.admin?
       @vpn = Vpn.new(vpn_params)
